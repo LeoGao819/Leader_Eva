@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>打分说明</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #f0f6fa url('bg.png') no-repeat center center;
+      background-size: cover;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #409eff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:active {
+      background: #66b1ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>领导干部考核测评说明</h2>
+    <p>为全面、公正地评价本次领导班子和人员履职情况，请您根据实际工作表现进行打分。</p>
+    <p>请本着实事求是、客观公正的原则，逐项进行评分，不可空项。</p>
+    <p>评分完成后将无法再次修改，请您认真填写。</p>
+    <button onclick="gotoNext()">我已阅读说明，进入信息核实</button>
+  </div>
+  <script>
+    function gotoNext() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const account = urlParams.get("account");
+      const type = urlParams.get("ticketType");
+      location.href = `VerifyPage.html?account=${account}&ticketType=${type}`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>云上一机 登录</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #f0f6fa url('bg.png') no-repeat center center;
+      background-size: cover;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px 0 10px;
+      position: relative;
+    }
+
+    .header img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+    }
+
+    .header h1 {
+      margin-top: 12px;
+      font-size: 24px;
+      color: #222;
+    }
+
+    .header p {
+      margin-top: 6px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    /* 扫一扫按钮 */
+    #scan-btn {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      background: #409eff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #scan-btn:hover {
+      background: #66b1ff;
+    }
+
+    .login-container {
+      width: 360px;
+      margin: 0 auto;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .login-form {
+      padding: 20px 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 40px 12px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-group .icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #999;
+    }
+
+    .form-group input:focus {
+      border-color: #409eff;
+      outline: none;
+    }
+
+    .network-select {
+      margin-bottom: 20px;
+    }
+
+    .network-select select {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      appearance: none;
+      background: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center;
+      background-color: #fff;
+      background-size: 16px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      color: #fff;
+      background: #409eff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-login:hover {
+      background: #66b1ff;
+    }
+
+    .login-footer {
+      margin: 40px auto 0;
+      width: 360px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+    /* 二维码扫描区域 */
+    #qr-reader {
+      width: 100%;
+      max-width: 360px;
+      margin: 20px auto;
+      display: none;
+    }
+  </style>
+  <!-- 引入 html5-qrcode 库 -->
+  <script src="./libs/html5-qrcode.min.js"></script>
+  <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
+</head>
+
+<body>
+  <div class="header">
+    <img src="logo.png" alt="云上一机 Logo">
+    <h1>云上一机</h1>
+    <p>领导干部考核测评系统</p>
+    <button id="scan-btn">扫一扫</button>
+  </div>
+
+  <!-- 二维码扫描器容器 -->
+  <div id="qr-reader"></div>
+
+  <div class="login-container">
+    <div class="login-box">
+      <form class="login-form" id="login-form" onsubmit="return validateLogin(event)">
+        <div class="form-group">
+          <input type="text" id="username" placeholder="请输入用户名" required>
+          <span class="icon">👤</span>
+        </div>
+        <div class="form-group">
+          <input type="password" placeholder="请输入密码" required>
+          <span class="icon">🔒</span>
+        </div>
+        <div class="network-select">
+          <select>
+            <option value="external">外网</option>
+            <option value="internal">内网</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-login">登录</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="login-footer">
+    中国兵器 · 一机集团
+  </div>
+
+  <script>
+    const scanBtn = document.getElementById('scan-btn');
+    const qrReader = document.getElementById('qr-reader');
+    let html5QrCode;
+
+    scanBtn.addEventListener('click', () => {
+      scanBtn.style.display = 'none';
+      qrReader.style.display = 'block';
+
+      html5QrCode = new Html5Qrcode("qr-reader");
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        qrCodeMessage => {
+          // 识别到二维码后的回调
+          // 期望格式 "account:0220023"
+          // index.html 的扫码成功回调中加入：
+          const match = qrCodeMessage.match(/account\\s*:\\s*(\\d+)/i);
+          if (match) {
+            const account = match[1];
+            const ticketType = 'A'; // 可以从二维码中解析，或默认赋值
+            location.href = `GuidePage.html?account=${account}&ticketType=${ticketType}`;
+          }
+
+          // 停止扫描并隐藏扫描器
+          html5QrCode.stop().then(() => {
+            qrReader.style.display = 'none';
+            scanBtn.style.display = 'inline-block';
+          });
+        },
+        errorMessage => {
+          // 识别失败或非二维码时的回调，可忽略
+        }
+      ).catch(err => {
+        console.error("启动摄像头失败:", err);
+        alert("无法访问摄像头，请检查浏览器权限设置！");
+        qrReader.style.display = 'none';
+        scanBtn.style.display = 'inline-block'; // 恢复按钮显示
+      });
+    });
+
+
+    function validateLogin(event) {
+      event.preventDefault(); // 阻止默认提交
+      const username = document.getElementById('username').value.trim();
+      const password = document.querySelector('input[type="password"]').value.trim();
+
+      if (!username || !password) {
+        alert("请输入账号和密码！");
+        return false;
+      }
+
+      // POST 到你后端验证接口（必须是 HTTPS）
+      // fetch('/api/verify', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ account: username, password: password })
+      // }).then(res => res.json()).then(res => {
+      //   if (res.ok) {
+      //     // 登录成功跳转说明页
+      //     location.href = `GuidePage.html?account=${username}&ticketType=${res.ticketType}`;
+      //   } else {
+      //     alert("账号或密码错误！");
+      //   }
+      // }).catch(() => {
+      //   alert("服务器异常，请稍后再试！");
+      // });
+      console.log(`模拟登录成功，跳转到 GuidePage.html?account=${username}&ticketType=A`);
+      location.href = `GuidePage.html?account=${username}&ticketType=A`;
+
+
+      return false; // 阻止表单自动提交
+    }
+
+  </script>
+</body>
+
+</html>

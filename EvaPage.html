@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>打分测评系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100%;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f0f6fa url('bg.png') no-repeat center center;
+            background-size: cover;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0 10px;
+        }
+
+        .header img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .header h1 {
+            margin-top: 8px;
+            font-size: 24px;
+            color: #222;
+        }
+
+        .header p {
+            margin-top: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        details {
+            margin-bottom: 12px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 8px 12px;
+        }
+
+        summary {
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 6px 0;
+        }
+
+        .inner-details {
+            margin-top: 8px;
+        }
+
+        .criteria {
+            margin: 16px 0;
+            background: #fff;
+            border-left: 4px solid #409eff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .criteria:hover {
+            box-shadow: 0 3px 12px rgba(64, 158, 255, 0.2);
+        }
+
+        .criteria label.title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .criteria.missing label.title {
+            color: red;
+        }
+
+        .radios {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-pair {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .radio-pair label {
+            flex: 1 1 48%;
+            background: #f4f6fa;
+            border: 1px solid #d0dbe7;
+            border-radius: 6px;
+            padding: 8px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .radio-pair input {
+            display: none;
+        }
+
+
+        .radio-pair span {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            margin: 24px 0;
+            font-size: 16px;
+            color: #fff;
+            background: #409eff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background: #66b1ff;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.3);
+            padding-top: 10px;
+        }
+
+        .radio-pair label.selected {
+            background-color: #409eff !important;
+            color: white;
+            font-weight: bold;
+            border: 1px solid #409eff;
+        }
+
+        .radio-pair input[type="checkbox"]:checked+span {
+            background-color: #409eff;
+            color: white;
+            font-weight: bold;
+            border: 1px solid #409eff;
+            border-radius: 6px;
+            height: 100%;
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Logo" />
+        <h1>云上一机</h1>
+        <p>领导干部考核测评系统</p>
+    </div>
+
+    <div class="container">
+        <details open>
+            <summary>领导班子测评</summary>
+            <div class="inner-details">
+                <template class="person-template" data-criteria='政治素养|履职业绩|团结协作|作风形象'>
+                    <details>
+                        <summary></summary>
+                        <form>
+                            <div class="criteria"><label class="title">政治素养</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">履职业绩</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">团结协作</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">作风形象</label>
+                                <div class="radios"></div>
+                            </div>
+                        </form>
+                    </details>
+                </template>
+                <div class="people" data-names='内蒙古数构工业互联网科技有限公司'></div>
+            </div>
+        </details>
+
+
+        <details>
+            <summary>领导人员测评</summary>
+            <div class="inner-details">
+                <template class="person-template"
+                    data-criteria='政治品质|政治本领|开拓创新|经营管理能力|抓党建强党建能力|担当作为|履职绩效|质量安全|一岗双责|廉洁从业'>
+                    <details>
+                        <summary></summary>
+                        <form>
+                            <div class="criteria"><label class="title">政治品质</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">政治本领</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">开拓创新</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">经营管理能力</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">抓党建强党建能力</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">担当作为</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">履职绩效</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">质量安全</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">一岗双责</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">廉洁从业</label>
+                                <div class="radios"></div>
+                            </div>
+                        </form>
+                    </details>
+                </template>
+                <div class="people" data-names='郑鸿|徐晶明|李磊'></div>
+            </div>
+        </details>
+
+        <details>
+            <summary>专务人员测评</summary>
+            <div class="inner-details">
+                <template class="person-template" data-criteria='政治素养|履职贡献|协调配合|作风形象'>
+                    <details>
+                        <summary></summary>
+                        <form>
+                            <div class="criteria"><label class="title">政治素养</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">履职贡献</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">协调配合</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">作风形象</label>
+                                <div class="radios"></div>
+                            </div>
+                        </form>
+                    </details>
+                </template>
+                <div class="people" data-names='张旭|王珊'></div>
+            </div>
+        </details>
+
+        <details>
+            <summary>高水平科技人才测评</summary>
+            <div class="inner-details">
+                <template class="person-template" data-criteria='政治素养|履职贡献|人才培养|作风形象'>
+                    <details>
+                        <summary></summary>
+                        <form>
+                            <div class="criteria"><label class="title">政治素养</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">履职贡献</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">人才培养</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">作风形象</label>
+                                <div class="radios"></div>
+                            </div>
+                        </form>
+                    </details>
+                </template>
+                <div class="people" data-names='李华|赵颖'></div>
+            </div>
+        </details>
+
+        <details>
+            <summary>高水平技能人才测评</summary>
+            <div class="inner-details">
+                <template class="person-template" data-criteria='政治素养|履职贡献|高师带徒|作风形象'>
+                    <details>
+                        <summary></summary>
+                        <form>
+                            <div class="criteria"><label class="title">政治素养</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">履职贡献</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">高师带徒</label>
+                                <div class="radios"></div>
+                            </div>
+                            <div class="criteria"><label class="title">作风形象</label>
+                                <div class="radios"></div>
+                            </div>
+                        </form>
+                    </details>
+                </template>
+                <div class="people" data-names='陈刚|孙雪'></div>
+            </div>
+        </details>
+    </div>
+
+    <div class="container">
+        <button id="global-submit" class="btn-submit">提交打分</button>
+    </div>
+
+    <div class="footer">中国兵器 · 一机集团</div>
+
+    <script>
+        document.querySelectorAll('.inner-details').forEach(section => {
+            const template = section.querySelector('template');
+            const peopleBlock = section.querySelector('.people');
+            const criteria = template.getAttribute('data-criteria').split('|');
+            const names = peopleBlock.getAttribute('data-names').split('|');
+            names.forEach(name => {
+                const clone = template.content.cloneNode(true);
+                clone.querySelector('summary').textContent = name;
+                const form = clone.querySelector('form');
+                form.innerHTML = '';
+                criteria.forEach(field => {
+                    const criteriaDiv = document.createElement('div');
+                    criteriaDiv.className = 'criteria';
+                    criteriaDiv.innerHTML = `<label class="title">${field}</label><div class="radios"></div>`;
+                    const radios = criteriaDiv.querySelector('.radios');
+                    for (let v = 10; v >= 1; v -= 2) {
+                        const pair = document.createElement('div');
+                        pair.className = 'radio-pair';
+                        for (let offset = 0; offset < 2; offset++) {
+                            const val = v - offset;
+                            if (val < 1) break;
+                            const id = name + '_' + field + '_' + val;
+                            const label = document.createElement('label');
+                            label.innerHTML = '<input type="radio" id="' + id + '" name="' + name + '_' + field + '" value="' + val + '"><span>' + val + '</span>';
+                            pair.appendChild(label);
+                        }
+                        radios.appendChild(pair);
+                    }
+                    form.appendChild(criteriaDiv);
+                });
+                const criteriaRec = template.getAttribute('data-criteria');
+                console.log(criteriaRec);
+
+                if (criteriaRec === '政治素养|履职业绩|团结协作|作风形象') {
+                    //我想在这里添加
+                    // 综合测评
+                    const evalDiv = document.createElement('div');
+                    evalDiv.className = 'criteria';
+                    evalDiv.innerHTML = `
+                <label class="title">综合评价</label>
+                
+                <div class="radios">
+                    <div class="radio-pair">
+                        <label><input type="radio" name="${name}_综合测评" value="1"><span>优秀</span></label>
+                        <label><input type="radio" name="${name}_综合测评" value="2"><span>良好</span></label>
+                    </div>
+                    <div class="radio-pair">
+                        <label><input type="radio" name="${name}_综合测评" value="3"><span>一般</span></label>
+                        <label><input type="radio" name="${name}_综合测评" value="4"><span>较差</span></label>
+                    </div>
+                </div>
+            `;
+                    form.appendChild(evalDiv);
+
+                    // 需要改进的主要方面
+                    const improveDiv = document.createElement('div');
+                    improveDiv.className = 'criteria';
+                    improveDiv.innerHTML = `
+                <label class="title">需要改进的主要方面（1-3项）</label>
+                <div class="radios">
+                    <div class="radio-pair">
+                        <label><input type="checkbox" name="${name}_改进方面" value="1"><span>工作思路</span></label>
+                        <label><input type="checkbox" name="${name}_改进方面" value="2"><span>运营质量</span></label>
+                    </div>
+                    <div class="radio-pair">
+                        <label><input type="checkbox" name="${name}_改进方面" value="3"><span>改革创新</span></label>
+                        <label><input type="checkbox" name="${name}_改进方面" value="4"><span>担当作为</span></label>
+                    </div>
+                    <div class="radio-pair">
+                        <label><input type="checkbox" name="${name}_改进方面" value="5"><span>党建工作</span></label>
+                        <label><input type="checkbox" name="${name}_改进方面" value="6"><span>整体合力</span></label>
+                    </div>
+                    <div class="radio-pair">
+                        <label><input type="checkbox" name="${name}_改进方面" value="7"><span>可持续发展</span></label>
+                        <label><input type="checkbox" name="${name}_改进方面" value="8"><span>廉洁自律</span></label>
+                    </div>
+                </div>
+            `;
+                    form.appendChild(improveDiv);
+                }
+                peopleBlock.appendChild(clone);
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // ✅ 回显 radio 分数项
+            document.querySelectorAll("input[type=radio]").forEach(input => {
+                const key = input.name;
+                const savedValue = localStorage.getItem(key);
+                if (savedValue && input.value === savedValue) {
+                    input.checked = true;
+                    input.parentElement.classList.add("selected");
+                }
+
+                input.addEventListener("change", () => {
+                    localStorage.setItem(key, input.value);
+                    document.querySelectorAll(`input[name='${key}']`).forEach(r => {
+                        r.parentElement.classList.remove("selected");
+                    });
+                    input.parentElement.classList.add("selected");
+                });
+            });
+
+            // ✅ 回显 checkbox 多选项
+            document.querySelectorAll("input[type=checkbox]").forEach(input => {
+                const key = input.name + "_" + input.value;
+                const saved = localStorage.getItem(key);
+                if (saved === "1") {
+                    input.checked = true;
+                }
+
+                input.addEventListener("change", () => {
+                    localStorage.setItem(key, input.checked ? "1" : "0");
+                });
+            });
+        });
+
+    </script>
+    <script>
+
+        document.getElementById("global-submit").addEventListener("click", () => {
+            let allPassed = true;
+
+            // 清除之前的 missing 标记
+            document.querySelectorAll(".criteria").forEach(c => c.classList.remove("missing"));
+
+            // 遍历所有 form，检查每个打分项是否已填
+            document.querySelectorAll("form").forEach(form => {
+                let formPassed = true;
+
+                // 检查 radio 打分项
+                const groups = [...new Set(
+                    Array.from(form.querySelectorAll("input[type=radio]")).map(input => input.name)
+                )];
+                groups.forEach(name => {
+                    const checked = form.querySelector(`input[name="${name}"]:checked`);
+                    if (!checked) {
+                        const target = form.querySelector(`input[name="${name}"]`)?.closest(".criteria");
+                        if (target) target.classList.add("missing");
+                        formPassed = false;
+                        allPassed = false;
+                    }
+                });
+
+                // 检查 checkbox（改进方面）
+                const improveBoxes = form.querySelectorAll('input[type=checkbox][name$="_改进方面"]');
+                if (improveBoxes.length > 0) {
+                    const checkedCount = Array.from(improveBoxes).filter(cb => cb.checked).length;
+                    if (checkedCount < 1 || checkedCount > 3) {
+                        const target = improveBoxes[0].closest(".criteria");
+                        if (target) target.classList.add("missing");
+                        formPassed = false;
+                        allPassed = false;
+                    }
+                }
+
+                // ✅ 如果这个 form 所有项都已填写完整，则折叠其所在的 <details>
+                if (formPassed) {
+                    const personDetail = form.closest("details");
+                    if (personDetail) personDetail.open = false;
+                }
+            });
+
+
+            if (!allPassed) {
+                // const firstMissing = document.querySelector(".criteria.missing");
+                // if (firstMissing) {
+                //     firstMissing.scrollIntoView({ behavior: "smooth", block: "center" });
+                // }
+                // alert("请完成所有必填项（包括综合评价和改进方面）");
+
+
+                // 找到所有有遗漏项的 .criteria
+                const missingItems = document.querySelectorAll(".criteria.missing");
+
+                // 打开所有包含遗漏项的 details 折叠块
+                missingItems.forEach(missing => {
+                    // const parentDetails = missing.closest("details");
+                    // if (parentDetails) parentDetails.open = true;
+                    // 打开所有祖先中的 details（包括一级与二级菜单）
+                    let current = missing.parentElement;
+                    while (current) {
+                        if (current.tagName?.toLowerCase() === "details") {
+                            current.open = true;
+                        }
+                        current = current.parentElement;
+                    }
+
+                });
+
+                // 滚动到第一个未填项
+                const firstMissing = missingItems[0];
+                if (firstMissing) {
+                    firstMissing.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+
+                alert("请完成所有必填项（包括综合评价和改进方面）");
+            } else {
+                alert("已提交！");
+                localStorage.clear(); // 清除所有本地存储数据
+                // 这里可以加实际提交逻辑，比如 fetch/ajax 或跳转
+            }
+        });
+    </script>
+    <script>
+        // 限制“需要改进的主要方面”最多选 3 项
+        document.addEventListener("change", (e) => {
+            const checkbox = e.target;
+            if (
+                checkbox.type === "checkbox" &&
+                checkbox.name.endsWith("_改进方面")
+            ) {
+                const form = checkbox.closest("form");
+                const checkboxes = form.querySelectorAll(
+                    `input[type=checkbox][name="${checkbox.name}"]`
+                );
+                const checked = Array.from(checkboxes).filter((c) => c.checked);
+
+                if (checked.length > 3) {
+                    alert("“需要改进的主要方面”最多选择 3 项");
+                    checkbox.checked = false;
+                }
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
