@@ -211,12 +211,20 @@
           // 识别到二维码后的回调
           // 期望格式 "account:0220023"
           // index.html 的扫码成功回调中加入：
-          const match = qrCodeMessage.match(/account\\s*:\\s*(\\d+)/i);
+          const match = qrCodeMessage.match(/account\s*:\s*(\d+)\s+password\s*:\s*(\d+)/i);
           if (match) {
             const account = match[1];
-            const ticketType = 'A'; // 可以从二维码中解析，或默认赋值
-            location.href = `GuidePage.html?account=${account}&ticketType=${ticketType}`;
+            const password = match[2];
+            document.getElementById('username').value = account;
+            document.querySelector('input[type="password"]').value = password;
+
+            // 添加高亮反馈（可选）
+            document.getElementById('username').style.borderColor = "#67c23a";
+            document.querySelector('input[type="password"]').style.borderColor = "#67c23a";
+
+            alert("已填入账号密码，请点击登录按钮");
           }
+
 
           // 停止扫描并隐藏扫描器
           html5QrCode.stop().then(() => {
