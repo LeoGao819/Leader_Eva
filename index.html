@@ -162,7 +162,7 @@
     <img src="logo.png" alt="云上一机 Logo">
     <h1>云上一机</h1>
     <p>领导干部考核测评系统</p>
-    <button id="scan-btn">扫一扫</button>
+    <!-- <button id="scan-btn">扫一扫</button> -->
   </div>
 
   <!-- 二维码扫描器容器 -->
@@ -273,7 +273,38 @@
       location.href = `GuidePage.html?account=${username}&ticketType=A`;
 
 
+
       return false; // 阻止表单自动提交
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = getQueryParams();
+      if (params.account) {
+        document.getElementById('username').value = params.account;
+        document.getElementById('username').style.borderColor = "#67c23a";
+      }
+      if (params.password) {
+        document.querySelector('input[type="password"]').value = params.password;
+        document.querySelector('input[type="password"]').style.borderColor = "#67c23a";
+      }
+
+      if (params.account || params.password) {
+        alert("已自动填入账号密码，请点击登录按钮");
+      }
+    });
+
+  </script>
+  <script>
+    function getQueryParams() {
+      const params = {};
+      const queryString = window.location.search.slice(1);
+      const pairs = queryString.split("&");
+      for (const pair of pairs) {
+        const [key, value] = pair.split("=");
+        if (key && value) {
+          params[decodeURIComponent(key)] = decodeURIComponent(value);
+        }
+      }
+      return params;
     }
 
   </script>
